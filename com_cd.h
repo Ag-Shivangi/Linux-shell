@@ -6,7 +6,7 @@ int call_cd()
 {
     if (numargs > 2)
     {
-        printf("cd: Too many arguments");
+        printf("cd: Too many arguments\n");
         return 0;
     }
     if (numargs == 1)

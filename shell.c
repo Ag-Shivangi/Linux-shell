@@ -1,7 +1,7 @@
 
 #include "global.h"
 #include "com_cd.h"
-
+#include "com_pwd.h"
 void initfun()
 {
     struct utsname xname;
@@ -100,6 +100,10 @@ int main()
         else if (strcmp(commands[0], "cd") == 0)
         {
             int check = call_cd();
+        }
+        else if (strcmp(commands[0], "pwd") == 0)
+        {
+            int check = call_pwd();
         }
         free(commands);
     }
