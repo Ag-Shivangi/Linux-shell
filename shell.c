@@ -1,6 +1,7 @@
 
 #include "global.h"
 #include "com_cd.h"
+#include "com_echo.h"
 #include "com_pwd.h"
 void initfun()
 {
@@ -104,6 +105,10 @@ int main()
         else if (strcmp(commands[0], "pwd") == 0)
         {
             int check = call_pwd();
+        }
+        else if (strcmp(commands[0], "echo") == 0)
+        {
+            int check = call_echo();
         }
         free(commands);
     }
