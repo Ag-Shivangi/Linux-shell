@@ -13,5 +13,6 @@ const char *DELIMITER = " \t\r\n\a";
 const int MAX_ARGUMENTS = 1024;
 int numargs;
 char **commands;
+char lastpwd[1000];
 
 #endif

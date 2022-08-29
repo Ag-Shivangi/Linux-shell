@@ -9,6 +9,11 @@ int call_cd()
         printf("cd: Too many arguments\n");
         return 0;
     }
+    char temppwd[1000];
+    strcpy(temppwd, lastpwd);
+    struct utsname xname;
+    uname(&xname);
+    char *result = getcwd(lastpwd, sizeof(lastpwd));
     if (numargs == 1)
     {
         int ret = chdir(shelldir);
@@ -18,6 +23,24 @@ int call_cd()
             return 0;
         }
 
+        return 1;
+    }
+    if (commands[1][0] == '~')
+    {
+        chdir(shelldir);
+        if (strlen(commands[1]) > 2)
+        {
+            commands[1]++;
+            commands[1]++;
+        }
+        else
+        {
+            return 1;
+        }
+    }
+    if (strcmp(commands[1], "-") == 0)
+    {
+        chdir(temppwd);
         return 1;
     }
     int ret = chdir(commands[1]);
