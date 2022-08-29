@@ -1,34 +1,40 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "global.h"
+#include "com_cd.h"
 #include <unistd.h>
 #include <string.h>
+
+void initfun()
+{
+    size_t currdirname_size;
+    char *currdirname = (char *)malloc(1000 * sizeof(char));
+    char *result = getcwd(currdirname, currdirname_size);
+    strcpy(shelldir, currdirname);
+}
 void currwd()
 {
     size_t currdirname_size;
     char *currdirname = (char *)malloc(1000 * sizeof(char));
-    char *currdir = (char *)malloc(1000 * sizeof(char));
     char *result = getcwd(currdirname, currdirname_size);
-    int count = 0, index = 0;
-    for (int i = 0; i < strlen(currdirname); i++)
+    if (cdflag == 1)
     {
-        if (currdirname[i] == '/')
-        {
-            count++;
-        }
-        if (count == 3)
-        {
-            index = i;
-            break;
-        }
+        printf("%s", currdirname);
+        free(currdirname);
+        return;
     }
-    for (int i = index; i < strlen(currdirname); i++)
+    printf("%s", currdirname + strlen(shelldir));
+}
+char *readLine()
+{
+    char *ret = (char *)malloc(1000 * sizeof(char));
+    size_t len = 1000;
+    if (getline(&ret, &len, stdin) == -1)
     {
-        currdir[i - index] = currdirname[i];
+        printf("quit\n");
+        _exit(2);
     }
-    printf("\033[0;33m");
-    printf(":~%s", currdir);
-    free(currdirname);
-    free(currdir);
+    return ret;
 }
 // Specification 1
 void prompt()
@@ -39,30 +45,51 @@ void prompt()
     int res = getlogin_r(username, username_size);
     res = gethostname(hostname, hostname_size);
     printf("\033[0;32m");
-    printf("%s@%s", username, hostname);
+    printf("<%s@%s", username, hostname);
     free(username);
     free(hostname);
-    printf("\033[0m");
+    printf("\033[0;33m");
+    printf(":~");
     currwd();
+    printf("> ");
     printf("\033[0m");
-    printf("$ ");
 }
-
+char **separateInput(char *line)
+{
+    char **ret = (char **)malloc(MAX_ARGUMENTS * sizeof(char *));
+    char *arg;
+    int idx = 0;
+    if (!ret)
+    {
+        perror("Memory allocation failure");
+        exit(1);
+    }
+    arg = strtok(line, DELIMITER);
+    while (arg != NULL)
+    {
+        ret[idx++] = arg;
+        arg = strtok(NULL, DELIMITER);
+    }
+    ret[idx] = arg;
+    numargs = idx;
+    return ret;
+}
 int main()
 {
+    initfun();
     char input[1000];
     while (1)
     {
         prompt();
-        // char *buffer;
-        // size_t charac, buf_size = 1000;
-        // buffer = (char *)malloc(sizeof(char) * buf_size);
-        // charac = getline(&buffer, &buf_size, stdin);
-        // strcpy(input, buffer);
-        // free(buffer);
-        scanf("%s", input);
-        if (strcmp(input, "exit") == 0)
+        strcpy(input, readLine());
+        commands = separateInput(input);
+        if (strcmp(commands[0], "exit") == 0)
             break;
+        else if (strcmp(commands[0], "cd") == 0)
+        {
+            int check = call_cd();
+        }
+        free(commands);
     }
     return 0;
 }
