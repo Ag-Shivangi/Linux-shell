@@ -1,29 +1,42 @@
-#include <stdio.h>
-#include <stdlib.h>
+
 #include "global.h"
 #include "com_cd.h"
-#include <unistd.h>
-#include <string.h>
 
 void initfun()
 {
-    size_t currdirname_size;
-    char *currdirname = (char *)malloc(1000 * sizeof(char));
-    char *result = getcwd(currdirname, currdirname_size);
+    struct utsname xname;
+    uname(&xname);
+    char currdirname[1000];
+    char *result = getcwd(currdirname, sizeof(currdirname));
     strcpy(shelldir, currdirname);
 }
 void currwd()
 {
-    size_t currdirname_size;
-    char *currdirname = (char *)malloc(1000 * sizeof(char));
-    char *result = getcwd(currdirname, currdirname_size);
-    if (cdflag == 1)
+    struct utsname xname;
+    uname(&xname);
+    char currdirname[1000];
+    char *result = getcwd(currdirname, sizeof(currdirname));
+
+    int cflag = 0;
+    if (strlen(currdirname) < strlen(shelldir))
+        cflag = 1;
+    else
     {
-        printf("%s", currdirname);
-        free(currdirname);
-        return;
+        for (int i = 0; i < strlen(shelldir); i++)
+            if (shelldir[i] != currdirname[i])
+            {
+                cflag = 1;
+                break;
+            }
     }
-    printf("%s", currdirname + strlen(shelldir));
+    if (cflag == 1)
+        printf("%s", currdirname);
+    else
+    {
+        printf("~");
+        for (int i = strlen(shelldir); i < strlen(currdirname); i++)
+            printf("%c", currdirname[i]);
+    }
 }
 char *readLine()
 {
@@ -39,17 +52,16 @@ char *readLine()
 // Specification 1
 void prompt()
 {
+    struct utsname xname;
+    uname(&xname);
+    struct passwd *p = getpwuid(getuid());
     size_t username_size, hostname_size;
-    char *username = (char *)malloc(1000 * sizeof(char));
-    char *hostname = (char *)malloc(1000 * sizeof(char));
-    int res = getlogin_r(username, username_size);
-    res = gethostname(hostname, hostname_size);
+    char *username = p->pw_name;
+    char *hostname = xname.nodename;
     printf("\033[0;32m");
     printf("<%s@%s", username, hostname);
-    free(username);
-    free(hostname);
     printf("\033[0;33m");
-    printf(":~");
+    printf(":");
     currwd();
     printf("> ");
     printf("\033[0m");
