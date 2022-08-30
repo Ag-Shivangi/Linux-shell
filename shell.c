@@ -59,70 +59,61 @@ void prompt()
     size_t username_size, hostname_size;
     char *username = p->pw_name;
     char *hostname = xname.nodename;
-    printf("\033[0;32m");
+    printf("\033[0;32m"); // prints in green
     printf("<%s@%s", username, hostname);
-    printf("\033[0;33m");
+    printf("\033[0;33m"); // prints in yellow
     printf(":");
     currwd();
     printf("> ");
-    printf("\033[0m");
+    printf("\033[0m"); // resets stdout color
 }
+// Separates tokens of a command (removes spaces enter etc)
 char **separateInput(char *line)
 {
     char **ret = (char **)malloc(MAX_ARGUMENTS * sizeof(char *));
     char *arg;
-    int idx = 0;
-    if (!ret)
-    {
-        perror("Memory allocation failure");
-        exit(1);
-    }
+    numargs = 0;
     arg = strtok(line, DELIMITER);
     while (arg != NULL)
     {
-        ret[idx++] = arg;
+        ret[numargs] = arg;
+        numargs++;
         arg = strtok(NULL, DELIMITER);
     }
-    ret[idx] = arg;
-    numargs = idx;
+    ret[numargs] = arg;
     return ret;
 }
-
+// separates commands of an input (;)
 char **separateCommands(char *line)
 {
     char **ret = (char **)malloc(MAX_ARGUMENTS * sizeof(char *));
     char *arg;
     const char x[] = ";";
-    int idx = 0;
-    if (!ret)
-    {
-        perror("Memory allocation failure");
-        exit(1);
-    }
+    numcommands = 0;
     arg = strtok(line, x);
     while (arg != NULL)
     {
-        ret[idx] = arg;
-        idx++;
+        ret[numcommands] = arg;
+        numcommands++;
         arg = strtok(NULL, x);
     }
-    ret[idx] = arg;
-    numcommands = idx;
+    ret[numcommands] = arg;
     return ret;
 }
 
 int main()
 {
-    initfun();
+    initfun(); // initializes shelldir
     char input[1000];
     while (1)
     {
-        prompt();
+        prompt(); // prints username, hostname and path
         strcpy(input, readLine());
         char **commandsHere = separateCommands(input);
         for (int i = 0; i < numcommands; i++)
         {
             commands = separateInput(commandsHere[i]);
+            // checking bg process
             if (strcmp(commands[numargs - 1], "&") == 0)
             {
                 curCommandBg = 1;
@@ -132,6 +123,7 @@ int main()
             {
                 curCommandBg = 0;
             }
+            // command identifier
             int check;
             if (strcmp(commands[0], "exit") == 0)
                 break;
@@ -147,10 +139,6 @@ int main()
             {
                 check = call_echo();
             }
-            // for (int i = 0; i < numargs; i++)
-            // {
-            //     free(commands[i]);
-            // }
             free(commands);
         }
         free(commandsHere);

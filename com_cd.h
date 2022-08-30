@@ -25,6 +25,7 @@ int call_cd()
 
         return 1;
     }
+    // ~ flag for cd
     if (commands[1][0] == '~')
     {
         chdir(shelldir);
@@ -38,6 +39,7 @@ int call_cd()
             return 1;
         }
     }
+    // - flag for cd
     if (strcmp(commands[1], "-") == 0)
     {
         chdir(temppwd);

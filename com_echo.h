@@ -4,6 +4,7 @@
 
 int call_echo()
 {
+    // prints the token separated by a " "
     for (int i = 1; i < numargs; i++)
     {
         printf("%s ", commands[i]);
