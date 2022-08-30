@@ -87,6 +87,30 @@ char **separateInput(char *line)
     numargs = idx;
     return ret;
 }
+
+char **separateCommands(char *line)
+{
+    char **ret = (char **)malloc(MAX_ARGUMENTS * sizeof(char *));
+    char *arg;
+    const char x[] = ";";
+    int idx = 0;
+    if (!ret)
+    {
+        perror("Memory allocation failure");
+        exit(1);
+    }
+    arg = strtok(line, x);
+    while (arg != NULL)
+    {
+        ret[idx] = arg;
+        idx++;
+        arg = strtok(NULL, x);
+    }
+    ret[idx] = arg;
+    numcommands = idx;
+    return ret;
+}
+
 int main()
 {
     initfun();
@@ -95,22 +119,41 @@ int main()
     {
         prompt();
         strcpy(input, readLine());
-        commands = separateInput(input);
-        if (strcmp(commands[0], "exit") == 0)
-            break;
-        else if (strcmp(commands[0], "cd") == 0)
+        char **commandsHere = separateCommands(input);
+        for (int i = 0; i < numcommands; i++)
         {
-            int check = call_cd();
+            commands = separateInput(commandsHere[i]);
+            if (strcmp(commands[numargs - 1], "&") == 0)
+            {
+                curCommandBg = 1;
+                numargs--;
+            }
+            else
+            {
+                curCommandBg = 0;
+            }
+            int check;
+            if (strcmp(commands[0], "exit") == 0)
+                break;
+            else if (strcmp(commands[0], "cd") == 0)
+            {
+                check = call_cd();
+            }
+            else if (strcmp(commands[0], "pwd") == 0)
+            {
+                check = call_pwd();
+            }
+            else if (strcmp(commands[0], "echo") == 0)
+            {
+                check = call_echo();
+            }
+            // for (int i = 0; i < numargs; i++)
+            // {
+            //     free(commands[i]);
+            // }
+            free(commands);
         }
-        else if (strcmp(commands[0], "pwd") == 0)
-        {
-            int check = call_pwd();
-        }
-        else if (strcmp(commands[0], "echo") == 0)
-        {
-            int check = call_echo();
-        }
-        free(commands);
+        free(commandsHere);
     }
     return 0;
 }
