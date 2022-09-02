@@ -2,6 +2,8 @@
 #include "global.h"
 #include "com_cd.h"
 #include "com_echo.h"
+#include "com_ls.h"
+#include "com_history.h"
 #include "com_pwd.h"
 void initfun()
 {
@@ -10,6 +12,13 @@ void initfun()
     char currdirname[1000];
     char *result = getcwd(currdirname, sizeof(currdirname));
     strcpy(shelldir, currdirname);
+
+    for (int i = 0; i < 20; i++)
+    {
+        history[i] = (char *)malloc(sizeof(char) * 1000);
+    }
+    first_hist = 0;
+    size_hist = 0;
 }
 void currwd()
 {
@@ -105,14 +114,27 @@ int main()
 {
     initfun(); // initializes shelldir
     char input[1000];
+    char tmp[1000];
     while (1)
     {
         prompt(); // prints username, hostname and path
         strcpy(input, readLine());
+        strcpy(tmp, input);
         char **commandsHere = separateCommands(input);
         for (int i = 0; i < numcommands; i++)
         {
             commands = separateInput(commandsHere[i]);
+            if (numargs == 0)
+                continue;
+            if (i == 0)
+            {
+                strcpy(history[(size_hist) % 20], tmp);
+                size_hist++;
+                if (size_hist > 20)
+                {
+                    first_hist = (first_hist + 1) % 20;
+                }
+            }
             // checking bg process
             if (strcmp(commands[numargs - 1], "&") == 0)
             {
@@ -126,7 +148,9 @@ int main()
             // command identifier
             int check;
             if (strcmp(commands[0], "exit") == 0)
-                break;
+            {
+                return 0;
+            }
             else if (strcmp(commands[0], "cd") == 0)
             {
                 check = call_cd();
@@ -135,9 +159,21 @@ int main()
             {
                 check = call_pwd();
             }
+            else if (strcmp(commands[0], "ls") == 0)
+            {
+                check = call_ls();
+            }
+            else if (strcmp(commands[0], "history") == 0)
+            {
+                check = call_history();
+            }
             else if (strcmp(commands[0], "echo") == 0)
             {
                 check = call_echo();
+            }
+            else if (strcmp(commands[0], "\n"))
+            {
+                printf("%s: command not found\n", commands[0]);
             }
             free(commands);
         }

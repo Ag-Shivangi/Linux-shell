@@ -1,6 +1,7 @@
 {
     "files.associations": {
         "com_cd.h": "c",
-        "com_pwd.h": "c"
+        "com_pwd.h": "c",
+        "com_history.h": "c"
     }
 }

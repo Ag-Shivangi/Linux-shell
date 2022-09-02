@@ -17,5 +17,6 @@ int curCommandBg;
 char **commands;
 char **allCommands;
 char lastpwd[1000];
-
+char *history[20];
+int first_hist, size_hist;
 #endif
