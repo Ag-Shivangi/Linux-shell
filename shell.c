@@ -5,6 +5,7 @@
 #include "com_ls.h"
 #include "com_history.h"
 #include "com_pwd.h"
+#include "com_pinfo.h"
 void initfun()
 {
     struct utsname xname;
@@ -12,7 +13,7 @@ void initfun()
     char currdirname[1000];
     char *result = getcwd(currdirname, sizeof(currdirname));
     strcpy(shelldir, currdirname);
-
+    Shell_Id = (int)getpid();
     for (int i = 0; i < 20; i++)
     {
         history[i] = (char *)malloc(sizeof(char) * 1000);
@@ -158,6 +159,10 @@ int main()
             else if (strcmp(commands[0], "pwd") == 0)
             {
                 check = call_pwd();
+            }
+            else if (strcmp(commands[0], "pinfo") == 0)
+            {
+                check = call_pinfo();
             }
             else if (strcmp(commands[0], "ls") == 0)
             {

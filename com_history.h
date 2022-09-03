@@ -6,7 +6,7 @@ int call_history()
     // printf("%d %d\n", first_hist, size_hist);
     if (size_hist == 0)
     {
-        return 0;
+        return 1;
     }
     for (int i = first_hist; (i % 20) != ((size_hist + 19) % 20); i++)
     {
