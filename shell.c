@@ -167,6 +167,7 @@ int main()
             else if (strcmp(commands[0], "ls") == 0)
             {
                 check = call_ls();
+                printf("\033[0m"); // resets stdout color
             }
             else if (strcmp(commands[0], "history") == 0)
             {
