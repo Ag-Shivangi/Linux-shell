@@ -6,6 +6,7 @@
 #include "com_history.h"
 #include "com_pwd.h"
 #include "com_pinfo.h"
+#include "foregroundprocess.h"
 void initfun()
 {
     struct utsname xname;
@@ -14,6 +15,7 @@ void initfun()
     char *result = getcwd(currdirname, sizeof(currdirname));
     strcpy(shelldir, currdirname);
     Shell_Id = (int)getpid();
+    curFgProc = (int)getpid();
     for (int i = 0; i < 20; i++)
     {
         history[i] = (char *)malloc(sizeof(char) * 1000);
@@ -179,7 +181,8 @@ int main()
             }
             else if (strcmp(commands[0], "\n"))
             {
-                printf("%s: command not found\n", commands[0]);
+                check = fgProc();
+                // printf("%s: command not found\n", commands[0]);
             }
             free(commands);
         }

@@ -74,13 +74,13 @@ int call_pinfo()
     {
         newline[0] = '~';
         int len_line = strlen(newline);
-        for (int a = strlen(shelldir); a < len_line; a++)
+        for (int i = strlen(shelldir); i < len_line; i++)
         {
-            newline[a - strlen(shelldir) + 1] = newline[a];
+            newline[i - strlen(shelldir) + 1] = newline[i];
         }
-        for (int a = len_line - strlen(shelldir) + 1; a < len_line; a++)
+        for (int i = len_line - strlen(shelldir) + 1; i < len_line; i++)
         {
-            newline[a] = '\0';
+            newline[i] = '\0';
         }
     }
     printf("executable Path  :  %s\n", newline);

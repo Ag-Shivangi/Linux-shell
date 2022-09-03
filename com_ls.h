@@ -23,71 +23,64 @@ int detailed_information(char file[], char fileName[])
             permissions[i + 1] = perm_settings[i % 3];
         }
     }
-    struct group *grp = getpwuid(stats.st_uid);
-    struct passwd *pwd = getgrgid(stats.st_gid);
-    time_t *t = malloc(1024);
-    *t = stats.st_mtime;
-    struct tm tm = *localtime(t);
     printf("%s", permissions);
     printf("%2ld ", stats.st_nlink);
+    struct passwd *pwd = getgrgid(stats.st_gid);
     printf("%s ", pwd->pw_name);
+    struct group *grp = getpwuid(stats.st_uid);
     printf("%s ", grp->gr_name);
     printf("%9ld ", stats.st_size);
-    printf("%s ", months[tm.tm_mon]);
-    printf("%2d ", tm.tm_mday);
-    printf("%02d:", tm.tm_hour);
-    printf("%02d ", tm.tm_min);
+    struct tm tm = *localtime(&stats.st_mtime);
+    printf("%s %2d %02d:%02d ", months[tm.tm_mon], tm.tm_mday, tm.tm_hour, tm.tm_min);
     printf("%s\n", fileName);
     return 1;
 }
 
 int call_ls()
 {
-    int flags[2] = {0, 0};
-    int A = 0;
-    int L = 1;
-    int count = 0;
-    for (int a = 1; a < numargs; a++)
+    int flags[2] = {0, 0}, A = 0, L = 1, count = 0;
+    for (int i = 1; i < numargs; i++)
     {
-        if (commands[a][0] != '-')
+        if (commands[i][0] != '-')
             continue;
-        if (strlen(commands[a]) == 1)
+        if (strlen(commands[i]) == 1)
             continue;
-        for (int b = 1; b < strlen(commands[a]); b++)
-            if (commands[a][b] == 'a')
+        for (int j = 1; j < strlen(commands[i]); j++)
+            if (commands[i][j] == 'a')
                 flags[A] = 1;
-            else if (commands[a][b] == 'l')
+            else if (commands[i][j] == 'l')
                 flags[L] = 1;
             else
             {
-                printf("ls: invalid option -- '%c'\n", commands[a][b]);
+                printf("ls: invalid option -- '%c'\n", commands[i][j]);
                 return 0;
             }
         count++;
     }
-    int num_dir = numargs - 1 - count;
-    int print_name = 0;
+    int num_dir = numargs - 1 - count, print_name = 0;
     if (num_dir > 1)
     {
         print_name = 1;
     }
-    int shown = 1;
     if (num_dir == 0)
     {
-        commands[numargs] = (char *)malloc(10 * sizeof(char));
-        strcpy(commands[numargs], ".");
-        numargs++;
+        commands[numargs] = (char *)malloc(100);
+        strcpy(commands[numargs++], ".\0");
     }
-    int exitCode = 1;
+    int correctDirs = num_dir;
     for (int a = 1; a < numargs; a++)
     {
-        int x = strlen(commands[a]);
         if (commands[a][0] == '-')
+        {
+            correctDirs--;
             continue;
+        }
         if (commands[a][0] == '~')
         {
             if (strlen(commands[a]) == 1)
+            {
                 strcpy(commands[a], shelldir);
+            }
             if (commands[a][1] == '/')
             {
                 remove_suffix(commands[a], 1);
@@ -98,7 +91,7 @@ int call_ls()
         if (dir == NULL)
         {
             perror("ls");
-            exitCode = 0;
+            correctDirs--;
             continue;
         }
         if (print_name)
@@ -111,8 +104,7 @@ int call_ls()
             struct stat stats;
             stat(commands[a], &stats);
             int total = 0;
-            struct dirent *fileCount;
-            fileCount = readdir(dir);
+            struct dirent *fileCount = readdir(dir);
             while (fileCount != NULL)
             {
                 char temp[1000];
@@ -125,14 +117,17 @@ int call_ls()
                 strcat(temp, fileCount->d_name);
                 fileCount = readdir(dir);
                 struct stat stats;
-                stat(temp, &stats);
+                if (stat(temp, &stats) < 0)
+                {
+                    perror("ls");
+                    continue;
+                }
                 total += stats.st_blocks;
             }
             printf("total %d\n", total / 2);
-            rewinddir(dir);
         }
-        struct dirent *fileHere;
-        fileHere = readdir(dir);
+        rewinddir(dir);
+        struct dirent *fileHere = readdir(dir);
         while (fileHere != NULL)
         {
             char temp[1000];
@@ -153,7 +148,11 @@ int call_ls()
                 else
                 {
                     struct stat stats;
-                    stat(fileHere->d_name, &stats);
+                    if (stat(fileHere->d_name, &stats) < 0)
+                    {
+                        perror("ls");
+                        continue;
+                    }
                     if ((stats.st_mode & S_IXUSR) || (stats.st_mode & S_IXOTH) || (stats.st_mode & S_IXGRP))
                     {
                         printf("\033[0;37m"); // prints in white
@@ -170,12 +169,11 @@ int call_ls()
             }
             fileHere = readdir(dir);
         }
-        if (num_dir > 1 && shown != num_dir)
+        if (fileHere != NULL)
         {
             printf("\n");
         }
-        shown++;
     }
-    return exitCode;
+    return (correctDirs == num_dir);
 }
 #endif

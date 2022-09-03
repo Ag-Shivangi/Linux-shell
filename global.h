@@ -12,6 +12,7 @@
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
+#include <sys/wait.h>
 #include <grp.h>
 
 char shelldir[1000];
@@ -22,6 +23,7 @@ const int MAX_ARGUMENTS = 1024;
 int numargs;
 int numcommands;
 int curCommandBg;
+int curFgProc;
 char **commands;
 char **allCommands;
 char lastpwd[1000];
