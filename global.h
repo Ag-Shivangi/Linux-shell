@@ -22,13 +22,15 @@ char months[12][4] = {"Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "S
 const int MAX_ARGUMENTS = 1024;
 int numargs;
 int numcommands;
-int curCommandBg;
 int curFgProc;
 char **commands;
 char **allCommands;
 char lastpwd[1000];
 char *history[20];
 int first_hist, size_hist;
+int bgcommands_num = 0;
+int bgprocesses_ID[1000];
+char bgprocesses_name[1000][1000];
 
 char *my_itoa(int val)
 {

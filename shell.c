@@ -7,6 +7,7 @@
 #include "com_pwd.h"
 #include "com_pinfo.h"
 #include "foregroundprocess.h"
+#include "backgroundprocess.h"
 void initfun()
 {
     struct utsname xname;
@@ -138,18 +139,14 @@ int main()
                     first_hist = (first_hist + 1) % 20;
                 }
             }
+            int check;
             // checking bg process
             if (strcmp(commands[numargs - 1], "&") == 0)
             {
-                curCommandBg = 1;
-                numargs--;
-            }
-            else
-            {
-                curCommandBg = 0;
+                check = bgproc();
+                continue;
             }
             // command identifier
-            int check;
             if (strcmp(commands[0], "exit") == 0)
             {
                 return 0;
