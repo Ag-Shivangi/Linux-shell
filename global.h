@@ -68,4 +68,32 @@ void remove_suffix(char *s, int n)
     for (int i = strlen(s) - n; i < len; i++)
         s[i] = '\0';
 }
+
+int string_contains(char *strtarget, char *strfind)
+{
+    int n = strlen(strtarget);
+    int m = strlen(strfind);
+    if (m == 0)
+        return 1;
+    for (int i = 0; i < n; i++)
+    {
+        int contains = 1;
+        for (int j = 0; j < m; j++)
+        {
+            if (i + j >= n)
+            {
+                contains = 0;
+                break;
+            }
+            if (strtarget[i + j] != strfind[j])
+            {
+                contains = 0;
+                break;
+            }
+        }
+        if (contains)
+            return 1;
+    }
+    return 0;
+}
 #endif

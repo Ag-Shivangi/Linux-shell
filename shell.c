@@ -6,6 +6,7 @@
 #include "com_history.h"
 #include "com_pwd.h"
 #include "com_pinfo.h"
+#include "com_discover.h"
 #include "foregroundprocess.h"
 #include "backgroundprocess.h"
 void initfun()
@@ -171,6 +172,10 @@ int main()
             else if (strcmp(commands[0], "history") == 0)
             {
                 check = call_history();
+            }
+            else if (strcmp(commands[0], "discover") == 0)
+            {
+                check = call_discover();
             }
             else if (strcmp(commands[0], "echo") == 0)
             {
