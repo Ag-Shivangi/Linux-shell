@@ -56,7 +56,7 @@ int find(char *toFind, char *dirPath, int flagD, int flagF)
     while (fileHere != NULL)
     {
         // printf("reading %s\n", fileHere->d_name);
-        if (fileHere->d_name[0] != '.' && fileHere->d_type == DT_DIR)
+        if (strlen(fileHere->d_name) > 0 && fileHere->d_name[0] != '.' && fileHere->d_type == DT_DIR)
         {
             // printf("from %s ", toFind);
             int len_here = strlen(dirPath);
@@ -66,6 +66,7 @@ int find(char *toFind, char *dirPath, int flagD, int flagF)
             find(toFind, dirPath, flagD, flagF);
             dirPath[len_here] = '\0';
         }
+        // printf("out of loop for %s\n", fileHere->d_name);
         fileHere = readdir(dir);
     }
     return 1;
@@ -88,7 +89,10 @@ int call_discover()
 {
     if (numargs == 1)
     {
-        return find("", ".", 1, 1);
+        char name[10000];
+        name[0] = '.';
+        name[1] = '\0';
+        return find("", name, 1, 1);
     }
     else if (numargs == 2)
     {
@@ -106,7 +110,10 @@ int call_discover()
                 printf("discover: incorrect flag provided\n");
                 return 0;
             }
-            return find("", ".", flagD, flagF);
+            char name[10000];
+            name[0] = '.';
+            name[1] = '\0';
+            return find("", name, flagD, flagF);
         }
         else
         {
