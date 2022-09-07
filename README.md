@@ -14,6 +14,7 @@ To run the shell use the command
 - Maximum number of background process- 1000
 - If only 1 non-flag argument is provided for discover, it is considered to be the path
 - If no flags are provided for discover, both flags are assumed.
+- Colour has not been implemented for discover (no such requirement mentioned)
 
 ### Directory Format
 Input is handled in "shell.c" which calls functions to execute the commands accordingly.

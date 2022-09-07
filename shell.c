@@ -184,6 +184,8 @@ int main()
             else if (strcmp(commands[0], "\n"))
             {
                 check = fgProc();
+                start_sec = 0;
+                end_Sec = 0;
                 // printf("%s: command not found\n", commands[0]);
             }
             free(commands);

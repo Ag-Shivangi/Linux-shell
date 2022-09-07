@@ -9,6 +9,7 @@
 #include <string.h>
 #include <sys/utsname.h>
 #include <pwd.h>
+#include <time.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <time.h>
@@ -31,7 +32,7 @@ int first_hist, size_hist;
 int bgcommands_num = 0;
 int bgprocesses_ID[1000];
 char bgprocesses_name[1000][1000];
-
+time_t start_sec = 0, end_Sec = 0;
 char *my_itoa(int val)
 {
     static char buf[32] = {0};

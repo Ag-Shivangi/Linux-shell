@@ -13,6 +13,11 @@ int fork_fun_proc(int flag)
     {
         return 0;
     }
+    end_Sec = time(NULL);
+    if (end_Sec - start_sec >= 1)
+    {
+        printf("%s took %ld seconds\n", commands[0], end_Sec - start_sec);
+    }
     pid_t shellflag = getpgid(Shell_Id);
     tcsetpgrp(0, shellflag);
     // default
@@ -22,6 +27,7 @@ int fork_fun_proc(int flag)
 }
 int fgProc()
 {
+    start_sec = time(NULL);
     pid_t flag = fork();
     if (flag < 0) // no process
     {
