@@ -1,6 +1,8 @@
 
 #include "global.h"
 #include "com_cd.h"
+#include "exit.h"
+#include "initial.h"
 #include "com_echo.h"
 #include "com_ls.h"
 #include "com_history.h"
@@ -9,22 +11,7 @@
 #include "com_discover.h"
 #include "foregroundprocess.h"
 #include "backgroundprocess.h"
-void initfun()
-{
-    struct utsname xname;
-    uname(&xname);
-    char currdirname[1000];
-    char *result = getcwd(currdirname, sizeof(currdirname));
-    strcpy(shelldir, currdirname);
-    Shell_Id = (int)getpid();
-    curFgProc = (int)getpid();
-    for (int i = 0; i < 20; i++)
-    {
-        history[i] = (char *)malloc(sizeof(char) * 1000);
-    }
-    first_hist = 0;
-    size_hist = 0;
-}
+
 void currwd()
 {
     struct utsname xname;
@@ -78,6 +65,12 @@ void prompt()
     printf("\033[0;33m"); // prints in yellow
     printf(":");
     currwd();
+    if (end_Sec - start_sec >= 1)
+    {
+        printf("took %lds", end_Sec - start_sec);
+    }
+    start_sec = 0;
+    end_Sec = 0;
     printf("> ");
     printf("\033[0m"); // resets stdout color
 }
@@ -117,7 +110,7 @@ char **separateCommands(char *line)
 
 int main()
 {
-    initfun(); // initializes shelldir
+    initfun(); // initializes shelldir, history
     char input[1000];
     char tmp[1000];
     while (1)
@@ -125,13 +118,14 @@ int main()
         prompt(); // prints username, hostname and path
         strcpy(input, readLine());
         strcpy(tmp, input);
+        int iscopy = strcmp(tmp, history[(size_hist + 19) % 20]);
         char **commandsHere = separateCommands(input);
         for (int i = 0; i < numcommands; i++)
         {
             commands = separateInput(commandsHere[i]);
             if (numargs == 0)
                 continue;
-            if (i == 0)
+            if (i == 0 & iscopy != 0)
             {
                 strcpy(history[(size_hist) % 20], tmp);
                 size_hist++;
@@ -150,6 +144,7 @@ int main()
             // command identifier
             if (strcmp(commands[0], "exit") == 0)
             {
+                exit_fun();
                 return 0;
             }
             else if (strcmp(commands[0], "cd") == 0)
@@ -184,8 +179,6 @@ int main()
             else if (strcmp(commands[0], "\n"))
             {
                 check = fgProc();
-                start_sec = 0;
-                end_Sec = 0;
                 // printf("%s: command not found\n", commands[0]);
             }
             free(commands);

@@ -8,7 +8,15 @@ int call_history()
     {
         return 1;
     }
-    for (int i = first_hist; (i % 20) != ((size_hist + 19) % 20); i++)
+    if (size_hist < 10)
+    {
+        for (int i = first_hist; i < size_hist; i++)
+        {
+            printf("%s", history[(i % 20)]);
+        }
+        return 1;
+    }
+    for (int i = (size_hist + 10) % 20; (i % 20) != ((size_hist + 19) % 20); i++)
     {
         printf("%s", history[(i % 20)]);
     }

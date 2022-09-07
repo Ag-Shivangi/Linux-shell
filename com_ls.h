@@ -148,9 +148,10 @@ int call_ls()
                 else
                 {
                     struct stat stats;
-                    if (stat(fileHere->d_name, &stats) < 0)
+                    if (stat(temp, &stats) < 0)
                     {
                         perror("ls");
+                        fileHere = readdir(dir);
                         continue;
                     }
                     if ((stats.st_mode & S_IXUSR) || (stats.st_mode & S_IXOTH) || (stats.st_mode & S_IXGRP))

@@ -16,6 +16,9 @@ To run the shell use the command
 - If no flags are provided for discover, both flags are assumed.
 - Colour has not been implemented for discover (no such requirement mentioned)
 - Hidden directories will be printed in discover (nothing was mentioned in the pdf)
+- The command "exit" ends the session. 
+- The history for a given session updates iff exit is called; otherwise it is reset to the state before the session.
+- The exit command is also added to the history.
 
 ### Directory Format
 Input is handled in "shell.c" which calls functions to execute the commands accordingly.

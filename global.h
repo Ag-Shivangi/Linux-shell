@@ -14,6 +14,7 @@
 #include <sys/types.h>
 #include <time.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 #include <grp.h>
 
 char shelldir[1000];
