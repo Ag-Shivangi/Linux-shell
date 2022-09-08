@@ -69,6 +69,7 @@ int find(char *toFind, char *dirPath, int flagD, int flagF)
         // printf("out of loop for %s\n", fileHere->d_name);
         fileHere = readdir(dir);
     }
+    closedir(dir);
     return 1;
 }
 
@@ -156,27 +157,42 @@ int call_discover()
                 strcpy(pathDir, commands[i]);
             }
         }
+        // printf("here\n");
         if (wrongFlag)
         {
             printf("discover: wrong flags\n");
             return 0;
         }
+        int freeTF = 0;
+        int freePD = 0;
         if (toFind == NULL)
         {
             toFind = (char *)malloc(10 * sizeof(char));
             toFind[0] = '\0';
+            freeTF = 1;
         }
         if (pathDir == NULL)
         {
             pathDir = (char *)malloc(10 * sizeof(char));
             pathDir[0] = '.';
             pathDir[1] = '\0';
+            freePD = 1;
         }
         if (flagF == 0 && flagD == 0)
         {
             flagF = flagD = 1;
         }
-        return find(toFind, pathDir, flagD, flagF);
+        printf("doing find with %s %s %d %d\n", toFind, pathDir, flagD, flagF);
+        int x = find(toFind, pathDir, flagD, flagF);
+        if (freeTF)
+        {
+            free(toFind);
+        }
+        if (freePD)
+        {
+            free(pathDir);
+        }
+        return x;
     }
     return 0;
 }

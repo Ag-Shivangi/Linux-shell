@@ -174,6 +174,7 @@ int call_ls()
         {
             printf("\n");
         }
+        closedir(dir);
     }
     return (correctDirs == num_dir);
 }

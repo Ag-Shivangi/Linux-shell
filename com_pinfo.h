@@ -14,6 +14,38 @@ int doesexist()
     }
     return 1;
 }
+int check_for_plus(char *line)
+{
+    char fourword[1000] = {'\0'};
+    int count = 0, j = 0;
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == ' ')
+            count++;
+        if (count == 4)
+            break;
+        if (count == 4 - 1)
+            fourword[j++] = line[i];
+    }
+    char sevenword[1000] = {'\0'};
+    count = 0;
+    j = 0;
+    for (int i = 0; i < strlen(line); i++)
+    {
+        if (line[i] == ' ')
+            count++;
+        if (count == 7)
+            break;
+        if (count == 7 - 1)
+            sevenword[j++] = line[i];
+    }
+    // printf("+%s+\n +%s+\n", fourword, sevenword);
+    if (strcmp(sevenword, fourword) == 0)
+    {
+        return 1;
+    }
+    return 0;
+}
 void nwordfun(char *line, int n)
 {
     char nword[1000] = {'\0'};
@@ -27,7 +59,16 @@ void nwordfun(char *line, int n)
         if (count == n - 1)
             nword[j++] = line[i];
     }
+    if (n == 3)
+    {
+        if (check_for_plus(line) == 1)
+        {
+            printf("%s+\n", nword);
+            return;
+        }
+    }
     printf("%s\n", nword);
+    return;
 }
 int call_pinfo()
 {
