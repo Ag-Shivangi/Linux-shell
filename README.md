@@ -21,6 +21,8 @@ To run the shell use the command
 - The exit command is also added to the history.
 
 ### Directory Format
-Input is handled in "shell.c" which calls functions to execute the commands accordingly.
+"shell.c" calls functions to execute the commands entered using a lookup table.
 Each command and type of process is implemented in a separate header file. 
 All standard libraries used have been included in "global.h". The global variables and repeated generic functions are also in "global.h".  
+Input, Prompt and Signals are handled in separate header files- "inputmanipulation.h" , "prompt.h" and "signalhandle.h".
+A Makefile is included to compile the shell.

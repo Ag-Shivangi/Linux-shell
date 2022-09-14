@@ -16,6 +16,7 @@
 #include <sys/wait.h>
 #include <fcntl.h>
 #include <grp.h>
+#include <signal.h>
 
 char shelldir[1000];
 int Shell_Id;
@@ -34,6 +35,10 @@ int bgcommands_num = 0;
 int bgprocesses_ID[1000];
 char bgprocesses_name[1000][1000];
 time_t start_sec = 0, end_Sec = 0;
+int kb_interrupt = 0;
+
+void prompt();
+
 char *my_itoa(int val)
 {
     static char buf[32] = {0};
