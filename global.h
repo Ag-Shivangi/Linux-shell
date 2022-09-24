@@ -27,6 +27,7 @@ int numargs;
 int numcommands;
 int curFgProc;
 char **commands;
+char **commandsHere;
 char **allCommands;
 char lastpwd[1000];
 char *history[20];

@@ -36,13 +36,13 @@ int call_fg()
         {
             return 0;
         }
-        return 1;
     }
     else
     {
         printf("Process has been terminated.\n");
         return 0;
     }
+    return 1;
 }
 
 #endif

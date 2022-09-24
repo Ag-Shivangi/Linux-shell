@@ -4,6 +4,8 @@
         "com_pwd.h": "c",
         "com_history.h": "c",
         "com_pinfo.h": "c",
-        "global.h": "c"
+        "global.h": "c",
+        "input_manipulation.h": "c",
+        "backgroundprocess.h": "c"
     }
 }
