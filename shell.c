@@ -43,6 +43,14 @@ int main()
                     first_hist = (first_hist + 1) % 20;
                 }
             }
+            if (checkForInputFile() < 0)
+            {
+                continue;
+            }
+            if (checkForOutputFile() < 0)
+            {
+                continue;
+            }
             int check;
             // checking bg process
             if (strcmp(commands[numargs - 1], "&") == 0)
@@ -93,6 +101,14 @@ int main()
                 // printf("%s: command not found\n", commands[0]);
             }
             free(commands);
+            if (changedStdIn)
+            {
+                resetFiles(copyOfStdIn, 0, &changedStdIn);
+            }
+            if (changedStdOut)
+            {
+                resetFiles(copyOfStdOut, 1, &changedStdOut);
+            }
         }
         free(commandsHere);
     }

@@ -36,6 +36,10 @@ int bgprocesses_ID[1000];
 char bgprocesses_name[1000][1000];
 time_t start_sec = 0, end_Sec = 0;
 int kb_interrupt = 0;
+int copyOfStdIn;
+int changedStdIn;
+int changedStdOut;
+int copyOfStdOut;
 
 void prompt();
 
