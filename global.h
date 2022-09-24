@@ -42,7 +42,7 @@ int changedStdOut;
 int copyOfStdOut;
 
 void prompt();
-
+void exit_fun();
 char *my_itoa(int val)
 {
     static char buf[32] = {0};
@@ -52,6 +52,31 @@ char *my_itoa(int val)
         buf[i] = "0123456789abcdef"[val % 10];
     }
     return &buf[i + 1];
+}
+
+int str_is_num(char *str)
+{
+    int len = strlen(str);
+    for (int i = 0; i < len; i++)
+    {
+        if (str[i] < '0' || str[i] > '9')
+        {
+            return 0;
+        }
+    }
+    return 1;
+}
+
+int my_atoi(char *str)
+{
+    int len = strlen(str);
+    int ret = 0;
+    for (int i = 0; i < len; i++)
+    {
+        ret *= 10;
+        ret += (str[i] - '0');
+    }
+    return ret;
 }
 
 void string_prepend(char *s, char *suffix)

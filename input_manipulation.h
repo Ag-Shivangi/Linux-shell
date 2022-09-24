@@ -8,7 +8,8 @@ char *readLine()
     size_t len = 1000;
     if (getline(&ret, &len, stdin) == -1)
     {
-        printf("quit\n");
+        printf("Exiting terminal\n");
+        exit_fun();
         _exit(2);
     }
     return ret;

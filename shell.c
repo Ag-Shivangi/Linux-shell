@@ -11,6 +11,7 @@
 #include "com_pwd.h"
 #include "com_pinfo.h"
 #include "com_discover.h"
+#include "com_sig.h"
 #include "foregroundprocess.h"
 #include "backgroundprocess.h"
 #include "signalhandle.h"
@@ -99,6 +100,10 @@ int main()
             else if (strcmp(commands[0], "jobs") == 0)
             {
                 check = call_jobs();
+            }
+            else if (strcmp(commands[0], "sig") == 0)
+            {
+                check = call_sig();
             }
             else if (strcmp(commands[0], "\n"))
             {
