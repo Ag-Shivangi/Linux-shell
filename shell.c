@@ -5,6 +5,7 @@
 #include "exit.h"
 #include "initial.h"
 #include "com_echo.h"
+#include "com_jobs.h"
 #include "com_ls.h"
 #include "com_history.h"
 #include "com_pwd.h"
@@ -94,6 +95,10 @@ int main()
             else if (strcmp(commands[0], "echo") == 0)
             {
                 check = call_echo();
+            }
+            else if (strcmp(commands[0], "jobs") == 0)
+            {
+                check = call_jobs();
             }
             else if (strcmp(commands[0], "\n"))
             {
