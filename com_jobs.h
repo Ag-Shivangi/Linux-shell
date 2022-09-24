@@ -5,6 +5,30 @@
 
 int call_jobs()
 {
+    int flagR = 1;
+    int flagS = 1;
+    if (numargs > 2)
+    {
+        printf("%s: Invalid number of arguments\n", commands[0]);
+        return 0;
+    }
+    if (numargs == 2)
+    {
+        if (commands[1][0] != '-' || strlen(commands[1]) != 2)
+        {
+            printf("%s: Invalid argument %s\n", commands[0], commands[1]);
+            return 0;
+        }
+        if (commands[1][1] == 'r')
+            flagS = 0;
+        else if (commands[1][1] == 's')
+            flagR = 0;
+        else
+        {
+            printf("%s: Invalid argument %s\n", commands[0], commands[1]);
+            return 0;
+        }
+    }
     for (int i = 0; i < bgcommands_num; i++)
     {
         if (getpgid(bgprocesses_ID[i]) >= 0)
@@ -28,12 +52,16 @@ int call_jobs()
             idx++;
             char ret = line[idx];
             if (ret == 'T')
-                printf("[%d] Stopped %s [%d]\n", i + 1, bgprocesses_name[i], bgprocesses_ID[i]);
+            {
+                if (flagS)
+                    printf("[%d] Stopped %s [%d]\n", i + 1, bgprocesses_name[i], bgprocesses_ID[i]);
+            }
             else
-                printf("[%d] Running %s [%d]\n", i + 1, bgprocesses_name[i], bgprocesses_ID[i]);
+            {
+                if (flagR)
+                    printf("[%d] Running %s [%d]\n", i + 1, bgprocesses_name[i], bgprocesses_ID[i]);
+            }
         }
-        else
-            printf("[%d] Terminated %s [%d]\n", i + 1, bgprocesses_name[i], bgprocesses_ID[i]);
     }
     return 1;
 }

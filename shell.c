@@ -12,6 +12,7 @@
 #include "com_pinfo.h"
 #include "com_discover.h"
 #include "com_sig.h"
+#include "com_fg.h"
 #include "foregroundprocess.h"
 #include "backgroundprocess.h"
 #include "signalhandle.h"
@@ -104,6 +105,10 @@ int main()
             else if (strcmp(commands[0], "sig") == 0)
             {
                 check = call_sig();
+            }
+            else if (strcasecmp(commands[0], "fg") == 0)
+            {
+                check = call_fg();
             }
             else if (strcmp(commands[0], "\n"))
             {
