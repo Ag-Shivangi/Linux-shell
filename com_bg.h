@@ -16,7 +16,7 @@ int call_bg()
         printf("%s: invalid argument\n", commands[0]);
         return 0;
     }
-    int arg1 = my_atoi(commands[0]);
+    int arg1 = my_atoi(commands[1]);
     if (arg1 > bgcommands_num || arg1 == 0)
     {
         printf("%s: no such job\n", commands[0]);
