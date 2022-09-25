@@ -19,7 +19,7 @@
 
 int lookup()
 {
-    int check;
+    // int check;
     // checking bg process
     if (strcmp(commands[numargs - 1], "&") == 0)
     {

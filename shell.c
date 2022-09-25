@@ -5,6 +5,7 @@
 #include "signalhandle.h"
 #include "prompt.h"
 #include "lookup.h"
+#include "piping.h"
 
 int main()
 {
@@ -42,7 +43,15 @@ int main()
             {
                 continue;
             }
-            int check = lookup();
+            // int check;
+            if (checkpipes())
+            {
+                handlepipes();
+            }
+            else
+            {
+                check = lookup();
+            }
             free(commands);
             if (changedStdIn)
             {
